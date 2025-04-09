@@ -10,6 +10,8 @@ on:
 
 jobs:
   generate-summary:
+    permissions:
+      issues: write
     if: github.event_name == 'pull_request_target'
     runs-on: ubuntu-latest
     steps:
