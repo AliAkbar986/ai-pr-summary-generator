@@ -46,3 +46,4 @@ if __name__ == "__main__":
 
     summary = query_huggingface(prompt)
     post_comment_to_pr(summary, pr_number)
+
