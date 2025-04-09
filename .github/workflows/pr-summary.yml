@@ -10,7 +10,7 @@ on:
 
 jobs:
   generate-summary:
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'push' | 'pull_request_target'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -32,7 +32,7 @@ jobs:
           python scripts/generate_summary.py "${{ github.event.pull_request.title }}" "${{ github.event.pull_request.diff_url }}" "${{ github.event.pull_request.number }}"
 
   update-changelog:
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' | 'pull_request_target'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
