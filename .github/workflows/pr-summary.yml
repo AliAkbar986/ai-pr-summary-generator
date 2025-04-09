@@ -3,9 +3,13 @@ name: "AI PR Summary"
 on:
   pull_request:
     types: [opened, synchronize]
+  push:
+    branches:
+      - main
 
 jobs:
   generate-summary:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -26,3 +30,23 @@ jobs:
         run: |
           python scripts/generate_summary.py "${{ github.event.pull_request.title }}" "${{ github.event.pull_request.diff_url }}" "${{ github.event.pull_request.number }}"
 
+  update-changelog:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Update changelog
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python scripts/update_changelog.py
